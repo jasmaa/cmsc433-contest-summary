@@ -1,0 +1,43 @@
+{
+  "name": "Me",
+  "rank": 125,
+  "msg": "you are here",
+  "unsubscribe": "https://example.com",
+  "rankers": [
+    {
+      "name": "Accel",
+      "rank": 1,
+      "score": 7
+    },
+    {
+      "name": "DarkMatter",
+      "rank": 2,
+      "score": 7
+    },
+    {
+      "name": "Railgun",
+      "rank": 3,
+      "score": 7
+    },
+    {
+      "name": "Mugino",
+      "rank": 4,
+      "score": 7
+    },
+    {
+      "name": "MentalOut",
+      "rank": 5,
+      "score": 7
+    },
+    {
+      "name": "anonymous",
+      "rank": 6,
+      "score": 7
+    },
+    {
+      "name": "Gunha",
+      "rank": 7,
+      "score": 7
+    }
+  ]
+}

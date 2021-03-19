@@ -32,43 +32,49 @@ export async function fetchLeaderboard() {
 }
 
 /**
- * Generates email message for name
+ * Convert board to lookup
  * 
- * @param {*} name 
- * @param {*} oldBoard 
  * @param {*} board 
  * @returns 
  */
-export function generateMessage(name, oldBoard, board) {
-
-  const isOnOldBoard = checkOnBoard(name, oldBoard);
-  const isOnBoard = checkOnBoard(name, board);
-
-  // TODO: make more sophisticated
-
-  if (isOnOldBoard && !isOnBoard) {
-    // Not on leaderboard anymore
-    return `Hello ${name},\nYou are off the leaderboard.`
-  } else if (!isOnOldBoard && isOnBoard) {
-    // New to leaderboard
-    return `Hello ${name},\nWelcome to the leaderboard!`;
-  } else {
-    // No message
-    return null;
+export function board2lookup(board) {
+  const lookup = {};
+  if (board === null) {
+    return lookup;
   }
+  for (let i = 0; i < board.length; i++) {
+    const user = board[i];
+    lookup[user.name] = { ...user, rank: i + 1 };
+  }
+  return lookup;
 }
 
 /**
- * Check is user is on the board
+ * Generate ranking chart for user
  * 
- * @param {*} board 
+ * @param {*} name 
+ * @param {*} datedLookups 
  * @returns 
  */
-function checkOnBoard(name, board) {
-  for (const row of board) {
-    if (row.name === name) {
-      return true;
-    }
+export function generateRankingChart(name, datedLookups) {
+  const reversedDatedLookups = [...datedLookups].reverse();
+  return {
+    type: 'line',
+    data: {
+      labels: reversedDatedLookups.map(({ dateKey }) => dateKey),
+      datasets: [{
+        label: name,
+        data: reversedDatedLookups.map(({ lookup }) => lookup[name] ? lookup[name].rank : Infinity),
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            reverse: true,
+          }
+        }]
+      }
+    },
   }
-  return false;
-};
+}
