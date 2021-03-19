@@ -1,0 +1,17 @@
+name = <INSERT HERE>
+type = "webpack"
+webpack_config = "webpack.config.js"
+account_id = <INSERT HERE>
+workers_dev = true
+route = <INSERT HERE>
+zone_id = <INSERT HERE>
+
+kv_namespaces = [
+  { binding = "USERS", preview_id = <INSERT HERE>, id = <INSERT HERE> },
+  { binding = "BOARDS", preview_id = <INSERT HERE>, id = <INSERT HERE> }
+]
+
+vars = { SCOREBOARD_URL = <INSERT HERE>, SENDER_ADDRESS = <INSERT HERE>, UPDATE_TEMPLATE_ID = <INSERT HERE>, VERIFY_TEMPLATE_ID = <INSERT HERE>, WEB_URL = <INSERT HERE> }
+
+[triggers]
+crons = ["0 12 * * *"]
