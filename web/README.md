@@ -23,4 +23,4 @@ Authenticate with Netlify:
 Build and deploy with:
 
     yarn build
-    npx netlify deploy --dir build --prod
+    yarn deploy

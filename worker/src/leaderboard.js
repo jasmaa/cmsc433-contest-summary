@@ -32,12 +32,44 @@ export async function fetchLeaderboard() {
 }
 
 /**
+ * Get dated lookups from store
+ * 
+ * @param {*} now 
+ * @param {*} daysBack 
+ * @returns 
+ */
+export async function fetchDatedLookups(options = {}) {
+
+  const now = options.now || new Date();
+  const daysBack = Math.max(1, Math.min(options.daysBack || 5, 30));
+
+  const dateKeys = [...Array(daysBack).keys()].map(i => {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    return d.toISOString().substring(0, 10);
+  });
+
+  const datedLookups = await Promise.all(
+    dateKeys.map(dateKey =>
+      BOARDS.get(dateKey).then(board => {
+        return {
+          dateKey,
+          lookup: board2lookup(JSON.parse(board)),
+        }
+      })
+    )
+  );
+
+  return datedLookups;
+}
+
+/**
  * Convert board to lookup
  * 
  * @param {*} board 
  * @returns 
  */
-export function board2lookup(board) {
+function board2lookup(board) {
   const lookup = {};
   if (board === null) {
     return lookup;
@@ -56,25 +88,20 @@ export function board2lookup(board) {
  * @param {*} datedLookups 
  * @returns 
  */
-export function generateRankingChart(name, datedLookups) {
+export function generateRankingChartData(name, datedLookups) {
+  const names = Object.keys(datedLookups[0].lookup);
   const reversedDatedLookups = [...datedLookups].reverse();
   return {
-    type: 'line',
-    data: {
-      labels: reversedDatedLookups.map(({ dateKey }) => dateKey),
-      datasets: [{
-        label: name,
-        data: reversedDatedLookups.map(({ lookup }) => lookup[name] ? lookup[name].rank : Infinity),
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            reverse: true,
-          }
-        }]
-      }
-    },
-  }
+    labels: reversedDatedLookups.map(({ dateKey }) => dateKey),
+    datasets: names.map(v => {
+      const color = v === name ? 'cornflowerblue' : 'gainsboro';
+      return {
+        label: v,
+        data: reversedDatedLookups.map(({ lookup }) => lookup[v] ? lookup[v].rank : Infinity),
+        fill: false,
+        borderColor: color,
+        pointBackgroundColor: color,
+      };
+    }),
+  };
 }

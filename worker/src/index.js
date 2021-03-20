@@ -56,6 +56,9 @@ async function handleRequest(request) {
     case '/list':
       res = await handlers.list(request);
       break;
+    case '/chart':
+      res = await handlers.chart(request);
+      break;
     case '/register':
       res = await handlers.register(request);
       break;

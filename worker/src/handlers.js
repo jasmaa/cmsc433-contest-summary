@@ -1,4 +1,4 @@
-import { board2lookup, fetchLeaderboard, generateRankingChart } from './leaderboard';
+import { fetchDatedLookups, fetchLeaderboard, generateRankingChartData } from './leaderboard';
 import { sendEmailTemplate } from './sendGrid';
 import { uuidv4, validateEmail, zip } from './utils';
 
@@ -12,6 +12,34 @@ export async function list(request) {
     const data = await fetchLeaderboard();
     return new Response(
       JSON.stringify(data),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }
+  return new Response(null, { status: 405 });
+}
+
+/**
+ * Generate ranking chart for user
+ * 
+ * @param {*} request 
+ * @returns 
+ */
+export async function chart(request) {
+  if (request.method == 'GET') {
+    const url = new URL(request.url);
+    const params = url.searchParams;
+
+    const name = params.get('name');
+    if (!name) {
+      return new Response('Parameter "name" is required,', { status: 400 });
+    }
+    const daysBack = parseInt(params.get('daysBack'));
+
+    const datedLookups = await fetchDatedLookups({ daysBack });
+    const chartData = generateRankingChartData(name, datedLookups);
+
+    return new Response(
+      JSON.stringify(chartData),
       { headers: { "Content-Type": "application/json" } },
     );
   }
@@ -169,22 +197,7 @@ export async function updateAndNotify() {
   console.log('Board updated.');
 
   // Generate lookups for past days
-  // TODO: Promise all?
-  const now = new Date();
-  const DAYS_BACK = 5;
-  const datedLookups = [];
-  for (let i = 0; i < DAYS_BACK; i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const dateKey = d.toISOString().substring(0, 10);
-
-    // Retrieve board
-    const board = i === 0
-      ? currentBoard
-      : JSON.parse(await BOARDS.get(dateKey));
-    const lookup = board2lookup(board);
-    datedLookups.push({ dateKey, lookup });
-  }
+  const datedLookups = await fetchDatedLookups();
   console.log('Generated dated lookups.');
 
   await notifySubscribers(currentBoard, datedLookups);
@@ -224,7 +237,23 @@ async function notifySubscribers(currentBoard, datedLookups) {
 
   // Determine and send message
   for (const { name, email, code } of validUsers) {
-    const chart = generateRankingChart(name, datedLookups);
+    const chartData = generateRankingChartData(name, datedLookups);
+    const chart = {
+      type: 'line',
+      data: chartData,
+      options: {
+        legend: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              reverse: true,
+              min: 1,
+              stepSize: 1,
+            }
+          }]
+        }
+      },
+    };
     const data = {
       name: name,
       rank: currentLookup[name] ? currentLookup[name].rank : 'Unranked',
