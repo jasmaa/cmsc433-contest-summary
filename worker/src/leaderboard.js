@@ -22,6 +22,7 @@ export async function fetchLeaderboard() {
 
     return {
       name: arr[2],
+      rank: parseInt(arr[1]),
       runs: runs.map(runArr => {
         const v = parseFloat(runArr[1]);
         return !isNaN(v) ? v : runArr[1];
@@ -76,7 +77,7 @@ function board2lookup(board) {
   }
   for (let i = 0; i < board.length; i++) {
     const user = board[i];
-    lookup[user.name] = { ...user, rank: i + 1 };
+    lookup[user.name] = user;
   }
   return lookup;
 }
