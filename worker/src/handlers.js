@@ -30,9 +30,6 @@ export async function chart(request) {
     const params = url.searchParams;
 
     const name = params.get('name');
-    if (!name) {
-      return new Response('Parameter "name" is required,', { status: 400 });
-    }
     const daysBack = parseInt(params.get('daysBack'));
 
     const datedLookups = await fetchDatedLookups({ daysBack });

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import client from 'services/axios';
 
 /**
- * Register page
+ * Register widget
  * 
  * @returns 
  */
@@ -26,6 +26,7 @@ export default function Register() {
   return (
     <div className="grid grid-rows-none rounded shadow-xl m-5 p-5">
       <h1 className="text-4xl font-bold mb-3">Subscribe</h1>
+      <h1 className="text-lg mb-3">Get notified of contest updates daily.</h1>
 
       {
         errorMsg
