@@ -1,11 +1,11 @@
-import { fetchDatedLookups, fetchLeaderboard, generateRankingChartData } from '../leaderboard';
+import { fetchDatedLookups, fetchLeaderboard, generateRankingChartData, generateRuntimesChartData } from '../leaderboard';
 
 /**
  * Handles get list
  * @param {*} request 
  * @returns 
  */
- export async function list(request) {
+export async function list(request) {
   if (request.method == 'GET') {
     const data = await fetchLeaderboard();
     return new Response(
@@ -31,10 +31,14 @@ export async function chart(request) {
     const daysBack = parseInt(params.get('daysBack'));
 
     const datedLookups = await fetchDatedLookups({ daysBack });
-    const chartData = generateRankingChartData(name, datedLookups);
+    const rankingHistory = generateRankingChartData(name, datedLookups);
+    const runtimes = generateRuntimesChartData(name, datedLookups[0].lookup);
 
     return new Response(
-      JSON.stringify(chartData),
+      JSON.stringify({
+        rankingHistory,
+        runtimes
+      }),
       { headers: { "Content-Type": "application/json" } },
     );
   }

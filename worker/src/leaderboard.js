@@ -105,3 +105,28 @@ export function generateRankingChartData(name, datedLookups) {
     }),
   };
 }
+
+/**
+ * Generate radar chart data for runtimes
+ * 
+ * @param {*} name 
+ * @param {*} lookup 
+ * @returns 
+ */
+export function generateRuntimesChartData(name, lookup) {
+  const names = Object.keys(lookup);
+  const nRuns = lookup[names[0]].runs.length;
+  return {
+    labels: [...Array(nRuns).keys()].map(i => `Maze #${i + 1}`),
+    datasets: names.map(v => {
+      const color = v === name ? 'cornflowerblue' : 'gainsboro';
+      return {
+        label: v,
+        data: lookup[v].runs.map(t => Number.isFinite(t) ? Math.log(t + 1) : Infinity),
+        fill: false,
+        borderColor: color,
+        pointBackgroundColor: color,
+      };
+    }),
+  };
+}

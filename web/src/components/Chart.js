@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, Radar } from 'react-chartjs-2';
 import { useDebounce } from 'use-debounce';
 
 import client from 'services/axios';
@@ -15,13 +15,15 @@ export default function Chart() {
   const [name, setName] = useState('');
   const [nameQuery] = useDebounce(name, 100);
   const [isDone, setIsDone] = useState(false);
-  const [chartData, setChartData] = useState(null);
+  const [rankingHistory, setRankingHistory] = useState(null);
+  const [runtimes, setRuntimes] = useState(null);
 
   useEffect(() => {
     const fetchChart = async () => {
       try {
         const res = await client.get(encodeURI(`/chart?name=${name}`));
-        setChartData(res.data);
+        setRankingHistory(res.data.rankingHistory);
+        setRuntimes(res.data.runtimes);
       } catch (e) {
         console.log(e);
       }
@@ -32,11 +34,11 @@ export default function Chart() {
   }, []);
 
   useEffect(() => {
-    if (!chartData) {
+    if (!rankingHistory || !runtimes) {
       return;
     }
 
-    const newDatasets = chartData.datasets.map(dataset => {
+    const newRankingHistoryDatasets = rankingHistory.datasets.map(dataset => {
       const isTarget = dataset.label === nameQuery
       const color = isTarget ? 'cornflowerblue' : 'gainsboro';
       const order = isTarget ? 0 : 1;
@@ -48,9 +50,28 @@ export default function Chart() {
       }
     });
 
-    setChartData({
-      ...chartData.data,
-      datasets: newDatasets,
+    setRankingHistory({
+      ...rankingHistory.data,
+      datasets: newRankingHistoryDatasets,
+    });
+
+    const newRuntimesDatasets = runtimes.datasets.map(dataset => {
+      const isTarget = dataset.label === nameQuery
+      const color = isTarget ? 'cornflowerblue' : 'gainsboro';
+      const order = isTarget ? 0 : 1;
+      return {
+        ...dataset,
+        borderColor: color,
+        pointBackgroundColor: color,
+        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        fill: isTarget,
+        order,
+      }
+    });
+
+    setRuntimes({
+      ...runtimes.data,
+      datasets: newRuntimesDatasets,
     });
 
   }, [nameQuery]);
@@ -61,11 +82,22 @@ export default function Chart() {
 
   return (
     <div className="grid grid-rows-none rounded shadow-xl m-5 p-5">
-      <h1 className="text-4xl font-bold mb-5">Rankings</h1>
+      <input
+        className="border-2 border-gray-300 bg-gray-100 rounded p-2 outline-none mb-3"
+        value={name}
+        placeholder="Name"
+        onChange={e => {
+          setName(e.target.value);
+        }}
+      />
 
       <Line
-        data={chartData}
+        data={rankingHistory}
         options={{
+          title: {
+            text: 'Ranking History',
+            display: true,
+          },
           animation: {
             duration: 0,
           },
@@ -81,12 +113,18 @@ export default function Chart() {
           }
         }}
       />
-      <input
-        className="border-2 border-gray-300 bg-gray-100 rounded p-2 outline-none mt-3"
-        value={name}
-        placeholder="Name"
-        onChange={e => {
-          setName(e.target.value);
+
+      <Radar
+        data={runtimes}
+        options={{
+          title: {
+            text: 'Current Runtimes (log scale)',
+            display: true,
+          },
+          animation: {
+            duration: 0,
+          },
+          legend: false,
         }}
       />
     </div>
