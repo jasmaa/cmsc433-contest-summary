@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
+import { useDebounce } from 'use-debounce';
 
 import client from 'services/axios';
 
@@ -12,6 +13,7 @@ import client from 'services/axios';
 export default function Chart() {
 
   const [name, setName] = useState('');
+  const [nameQuery] = useDebounce(name, 100);
   const [isDone, setIsDone] = useState(false);
   const [chartData, setChartData] = useState(null);
 
@@ -29,14 +31,13 @@ export default function Chart() {
     fetchChart();
   }, []);
 
-  // TODO: debounce this
   useEffect(() => {
     if (!chartData) {
       return;
     }
 
     const newDatasets = chartData.datasets.map(dataset => {
-      const isTarget = dataset.label === name
+      const isTarget = dataset.label === nameQuery
       const color = isTarget ? 'cornflowerblue' : 'gainsboro';
       const order = isTarget ? 0 : 1;
       return {
@@ -52,7 +53,7 @@ export default function Chart() {
       datasets: newDatasets,
     });
 
-  }, [name]);
+  }, [nameQuery]);
 
   if (!isDone) {
     return <h1>loading</h1>
