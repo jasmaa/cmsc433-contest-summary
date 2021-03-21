@@ -1,5 +1,6 @@
 import { fetchDatedLookups, fetchLeaderboard, generateRankingChartData } from '../leaderboard';
 import { sendEmailTemplate } from '../sendGrid';
+import { zip } from '../utils';
 
 /**
  * Updates board and notifies users
