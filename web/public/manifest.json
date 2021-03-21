@@ -1,6 +1,6 @@
 {
-  "short_name": "CMSC433 Notifier",
-  "name": "Notification subscription for CMSC433 contest",
+  "short_name": "CMSC433 Contest Summary",
+  "name": "Summary visualizations for CMSC433 maze contest",
   "icons": [
     {
       "src": "favicon.ico",

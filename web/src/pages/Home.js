@@ -9,7 +9,7 @@ import Chart from 'components/Chart';
 export default function Home() {
   return (
     <div>
-      <h1 className="text-6xl font-bold text-center mt-3 mb-10">CMSC433 Contest Notifier</h1>
+      <h1 className="text-5xl font-bold text-center mt-3 mb-10">CMSC433 Contest Summary</h1>
       <Chart />
       <Register />
     </div>

@@ -1,6 +1,6 @@
-# CMSC433 Contest Notifier
+# CMSC433 Contest Summary
 
-Periodically notify users of CMSC433 contest scoreboard status
+Summary visualizations and updates for maze contest
 
 ## Development
 
@@ -25,5 +25,5 @@ Periodically notify users of CMSC433 contest scoreboard status
 
 ## Project Structure
 
-  - `worker`: Subscription API
+  - `worker`: Data jobs + summary and subscription API
   - `web`: Web frontend
