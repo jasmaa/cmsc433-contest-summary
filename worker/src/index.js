@@ -1,4 +1,6 @@
-import * as handlers from './handlers';
+import * as auth from './handlers/auth';
+import * as api from './handlers/api';
+import * as scheduled from './handlers/scheduled';
 
 addEventListener('scheduled', event => {
   event.waitUntil(handleSchedule(event.scheduledTime))
@@ -54,19 +56,19 @@ async function handleRequest(request) {
   let res;
   switch (url.pathname) {
     case '/list':
-      res = await handlers.list(request);
+      res = await api.list(request);
       break;
     case '/chart':
-      res = await handlers.chart(request);
+      res = await api.chart(request);
       break;
     case '/register':
-      res = await handlers.register(request);
+      res = await auth.register(request);
       break;
     case '/verify':
-      res = await handlers.verify(request);
+      res = await auth.verify(request);
       break;
     case '/unregister':
-      res = await handlers.unregister(request);
+      res = await auth.unregister(request);
       break;
     default:
       res = new Response('Not found', { status: 404 });
@@ -86,5 +88,5 @@ async function handleRequest(request) {
  * @param {*} scheduledDate 
  */
 async function handleSchedule(scheduledDate) {
-  await handlers.updateAndNotify();
+  await scheduled.updateAndNotify();
 }
