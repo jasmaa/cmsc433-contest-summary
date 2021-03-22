@@ -1,4 +1,5 @@
 import { fetchDatedLookups, fetchLeaderboard, generateRankingChartData, generateRuntimesChartData } from '../leaderboard';
+import * as LZString from 'lz-string';
 
 /**
  * Handles get list
@@ -36,8 +37,8 @@ export async function chart(request) {
 
     return new Response(
       JSON.stringify({
-        rankingHistory,
-        runtimes
+        rankingHistory: LZString.compress(JSON.stringify(rankingHistory)),
+        runtimes: LZString.compress(JSON.stringify(runtimes)),
       }),
       { headers: { "Content-Type": "application/json" } },
     );

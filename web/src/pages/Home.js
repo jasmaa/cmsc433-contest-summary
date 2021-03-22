@@ -11,7 +11,7 @@ export default function Home() {
     <div>
       <h1 className="text-5xl font-bold text-center mt-3 mb-10">CMSC433 Contest Summary</h1>
       <Chart />
-      <Register />
+      {/* <Register /> */}
     </div>
   );
 }

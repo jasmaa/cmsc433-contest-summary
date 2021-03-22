@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Line, Radar } from 'react-chartjs-2';
 import { useDebounce } from 'use-debounce';
+import * as LZString from 'lz-string';
 
 import client from 'services/axios';
 
@@ -22,8 +23,8 @@ export default function Chart() {
     const fetchChart = async () => {
       try {
         const res = await client.get(encodeURI(`/chart?name=${name}`));
-        setRankingHistory(res.data.rankingHistory);
-        setRuntimes(res.data.runtimes);
+        setRankingHistory(JSON.parse(LZString.decompress(res.data.rankingHistory)));
+        setRuntimes(JSON.parse(LZString.decompress(res.data.runtimes)));
       } catch (e) {
         console.log(e);
       }

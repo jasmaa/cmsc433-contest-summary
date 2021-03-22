@@ -73,10 +73,11 @@ export async function fetchDatedLookups(options = {}) {
  * @returns 
  */
 function board2lookup(board) {
-  const lookup = {};
   if (board === null) {
-    return lookup;
+    return null;
   }
+
+  const lookup = {};
   for (let i = 0; i < board.length; i++) {
     const user = board[i];
     lookup[user.name] = user;
