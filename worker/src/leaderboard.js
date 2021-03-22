@@ -44,13 +44,15 @@ export async function fetchDatedLookups(options = {}) {
   const now = options.now || new Date();
   const daysBack = Math.max(1, Math.min(options.daysBack || 5, 30));
 
+  // Find date keys for all days
   const dateKeys = [...Array(daysBack).keys()].map(i => {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     return d.toISOString().substring(0, 10);
   });
 
-  const datedLookups = await Promise.all(
+  // Fetch boards as lookups and filter missing
+  const datedLookups = (await Promise.all(
     dateKeys.map(dateKey =>
       BOARDS.get(dateKey).then(board => {
         return {
@@ -59,7 +61,7 @@ export async function fetchDatedLookups(options = {}) {
         }
       })
     )
-  );
+  )).filter(board => !!board.lookup);
 
   return datedLookups;
 }
