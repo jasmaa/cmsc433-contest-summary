@@ -27,3 +27,4 @@ Summary visualizations and updates for maze contest
 
   - `worker`: Data jobs + summary and subscription API
   - `web`: Web frontend
+  - `scripts`: Backup and data manipulation scripts
