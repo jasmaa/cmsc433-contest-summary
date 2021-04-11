@@ -13,7 +13,7 @@ def convert_to_csv(fname, outfile='out.csv'):
                          'maze3', 'maze4', 'maze5', 'maze6', 'maze7', 'score'])
         for entry in json_data:
             writer.writerow([entry['name'], entry['rank'],
-                             *entry['runs'], entry['rank']])
+                             *entry['runs'], entry['score']])
 
 
 USAGE = 'USAGE: python convert_to_csv.py <json_file>'
