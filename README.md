@@ -25,6 +25,6 @@ Summary visualizations and updates for maze contest
 
 ## Project Structure
 
-  - `worker`: Data jobs + summary and subscription API
-  - `web`: Web frontend
   - `scripts`: Backup and data manipulation scripts
+  - `web`: Web frontend
+  - `worker`: Data jobs + summary and subscription API
