@@ -26,7 +26,7 @@ export async function updateAndNotify() {
 async function updateBoard(board) {
   const dateKey = new Date().toISOString().substring(0, 10);
   await BOARDS.put('current', JSON.stringify(board));
-  await BOARDS.put(dateKey, JSON.stringify(board));
+  await BOARDS.put(dateKey, JSON.stringify(board), { expirationTtl: 604800 }); // 60*60*24*7
 }
 
 /**

@@ -93,7 +93,8 @@ function board2lookup(board) {
  * @returns 
  */
 export function generateRankingChartData(name, datedLookups) {
-  const names = Object.keys(datedLookups[0].lookup);
+  const namesLookup = datedLookups.length > 0 ? datedLookups[0].lookup : {};
+  const names = Object.keys(namesLookup);
   const reversedDatedLookups = [...datedLookups].reverse();
   return {
     labels: reversedDatedLookups.map(({ dateKey }) => dateKey),
@@ -119,7 +120,7 @@ export function generateRankingChartData(name, datedLookups) {
  */
 export function generateRuntimesChartData(name, lookup) {
   const names = Object.keys(lookup);
-  const nRuns = lookup[names[0]].runs.length;
+  const nRuns = names.length > 0 ? lookup[names[0]].runs.length : 7;
   return {
     labels: [...Array(nRuns).keys()].map(i => `Maze #${i + 1}`),
     datasets: names.map(v => {

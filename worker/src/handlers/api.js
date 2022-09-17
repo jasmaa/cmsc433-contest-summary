@@ -33,7 +33,8 @@ export async function chart(request) {
 
     const datedLookups = await fetchDatedLookups({ daysBack });
     const rankingHistory = generateRankingChartData(name, datedLookups);
-    const runtimes = generateRuntimesChartData(name, datedLookups[0].lookup);
+    const currentLookup = datedLookups.length > 0 ? datedLookups[0].lookup : {};
+    const runtimes = generateRuntimesChartData(name, currentLookup);
 
     return new Response(
       JSON.stringify({

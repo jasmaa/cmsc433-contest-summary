@@ -3,8 +3,8 @@ type = "webpack"
 webpack_config = "webpack.config.js"
 account_id = <INSERT HERE>
 workers_dev = true
-route = <INSERT HERE>
-zone_id = <INSERT HERE>
+main = "src/index.js"
+compatibility_date = "2022-09-17"
 
 kv_namespaces = [
   { binding = "USERS", preview_id = <INSERT HERE>, id = <INSERT HERE> },
